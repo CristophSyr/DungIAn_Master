@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DungIAn - El Grimorio del Dungeon Master (D&D 5e Assistant)</title>
+  <!-- Tailwind CSS CDN con configuración temática D&D 5e -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dnd: {
+              red: '#58180D',        /* El carmesí oficial de D&D 5e */
+              redHover: '#792314',
+              redDark: '#3b0f08',
+              gold: '#C99A3E',       /* Dorado antiguo / latón */
+              goldLight: '#E5B758',
+              goldDark: '#8C6B23',
+              parchment: '#F5EED9',  /* Pergamino claro para bloques */
+              parchmentDark: '#E8DDBE',
+              ink: '#231815',        /* Tinta oscura para texto sobre pergamino */
+              leather: '#18120C',    /* Cuero oscuro para fondo */
+              wood: '#0F0B08',       /* Madera quemada de taberna */
+              slate: '#2B231D'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=MedievalSharp&display=swap');
+
+    .font-dnd-title { font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; }
+    .font-dnd-heading { font-family: 'Cinzel', Georgia, serif; }
+    .font-dnd-body { font-family: 'Lora', Georgia, serif; }
+    .font-dnd-script { font-family: 'MedievalSharp', cursive, serif; }
+
+    body {
+      background-color: #0d0907;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(121, 35, 20, 0.15), transparent 60%),
+        radial-gradient(circle at 85% 85%, rgba(201, 154, 62, 0.08), transparent 50%),
+        linear-gradient(to bottom, #110c09, #090605);
+      color: #ede2d1;
+      font-family: 'Lora', Georgia, serif;
+    }
+
+    /* Efecto de Pergamino Clásico de Manual D&D 5e */
+    .parchment-sheet {
+      background: #f4eed9;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(212, 190, 150, 0.35), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(190, 165, 125, 0.4), transparent 45%),
+        linear-gradient(to bottom, #f7f1df, #efe5c8);
+      color: #231815;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65), 0 0 0 1px #8c6b23, 0 0 0 4px #2b1e16;
+      border: 1px solid #c99a3e;
+    }
+
+    /* Marco de Cuero / Grimorio Oscuro */
+    .tome-frame {
+      background: rgba(24, 18, 12, 0.88);
+      backdrop-filter: blur(8px);
+      border: 2px solid #58180d;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.6), 0 0 0 1px #c99a3e;
+    }
+
+    /* La icónica línea ahusada roja de D&D 5e */
+    .dnd-tapered-rule {
+      height: 4px;
+      background: radial-gradient(ellipse at center, #58180d 0%, #792314 45%, #c99a3e 85%, transparent 100%);
+      border: none;
+      margin: 10px 0;
+    }
+
+    /* Caja de Atributo oficial (FUE, DES, CON, INT, SAB, CAR) */
+    .stat-box {
+      background: #e9deb9;
+      border: 1px solid #792314;
+      border-radius: 4px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    /* Cuadrícula táctica interactiva (Grid de combate 5ft) */
+    .battle-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(201, 154, 62, 0.18) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(201, 154, 62, 0.18) 1px, transparent 1px);
+    }
+
+    /* Scrollbar con temática de pergamino */
+    .custom-scroll::-webkit-scrollbar { width: 7px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #18120c; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #58180d; border-radius: 4px; border: 1px solid #c99a3e; }
+
+    /* Efecto de sello de cera */
+    .wax-seal {
+      background: radial-gradient(circle at 35% 35%, #9e2a1b, #58180d 70%, #2f0702);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);
+      border: 2px solid #3b0f08;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-dnd-red selection:text-white">
+
+  <!-- ======================================================== -->
+  <!-- BARRA SUPERIOR: EL MARCO DEL DUNGEON MASTER               -->
+  <!-- ======================================================== -->
+  <header class="border-b-2 border-dnd-gold/60 bg-dnd-leather/95 sticky top-0 z-40 backdrop-blur-md px-6 py-2.5 flex items-center justify-between shadow-2xl">
+    <div class="flex items-center gap-4">
+      <div class="wax-seal w-11 h-11 rounded-full flex items-center justify-center text-dnd-goldLight font-dnd-title font-bold text-xl tracking-tighter shadow-lg">
+        &amp;
+      </div>
+      <div>
+        <h1 class="font-dnd-title font-bold text-xl tracking-widest text-dnd-goldLight flex items-center gap-3">
+          DungIAn <span class="text-[11px] font-dnd-heading px-2.5 py-0.5 rounded bg-dnd-red/60 border border-dnd-gold/40 text-amber-200 uppercase tracking-widest">Pantalla del DM</span>
+        </h1>
+        <p class="text-xs text-amber-200/60 font-dnd-body italic">Asistente de Co-Creación de Aventuras • D&amp;D 5ª Edición</p>
+      </div>
+    </div>
+
+    <!-- Indicadores de Tesis estilizados como Sellos Mágicos -->
+    <div id="live-metrics-bar" class="hidden flex items-center gap-5 bg-black/60 border border-dnd-gold/40 px-5 py-1.5 rounded-full text-xs shadow-inner">
+      <div class="flex items-center gap-2">
+        <span class="text-base text-amber-400">⏳</span>
+        <span class="text-stone-300 font-dnd-heading">Tiempo de Prep. (M1):</span>
+        <span id="timer-display" class="font-mono font-bold text-amber-300 text-sm">00:00</span>
+      </div>
+      <div class="h-4 w-px bg-dnd-gold/40"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-base text-dnd-gold">📜</span>
+        <span class="text-stone-300 font-dnd-heading">Elementos Validados (M2):</span>
+        <span id="valid-count-display" class="font-bold text-dnd-goldLight bg-dnd-red/50 px-2.5 py-0.5 rounded border border-dnd-gold/40">0</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div id="user-badge" class="hidden text-right font-dnd-body">
+        <span id="header-user-name" class="text-xs font-semibold text-dnd-goldLight block">Dungeon Master</span>
+        <span class="text-[10px] text-emerald-400 block tracking-wider">● Enlace de Campaña Activo</span>
+      </div>
+      <button onclick="switchScreen('screen-login')" class="text-xs text-amber-200/80 hover:text-amber-100 bg-dnd-red/50 hover:bg-dnd-red px-3.5 py-1.5 rounded border border-dnd-gold/40 transition font-dnd-heading tracking-wider">
+        Reiniciar Grimorio
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="flex-1 flex flex-col relative overflow-hidden">
+
+    <!-- ======================================================== -->
+    <!-- PANTALLA 1: PORTADA DEL GRIMORIO / INGRESO (HU-01)        -->
+    <!-- ======================================================== -->
+    <section id="screen-login" class="screen-view active flex-1 flex items-center justify-center p-6">
+      <div class="w-full max-w-lg tome-frame p-8 rounded-2xl relative">
+        <!-- Adorno en las esquinas -->
+        <div class="absolute top-2 left-2 text-dnd-gold/40 text-lg select-none">⚜</div>
+        <div class="absolute top-2 right-2 text-dnd-gold/40 text-lg select-none">⚜</div>
+        <div class="absolute bottom-2 left-2 text-dnd-gold/40 text-lg select-none">⚜</div>
+        <div class="absolute bottom-2 right-2 text-dnd-gold/40 text-lg select-none">⚜</div>
+
+        <div class="text-center mb-6">
+          <div class="wax-seal w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-3 shadow-xl">
+            🐉
+          </div>
+          <h2 class="font-dnd-title text-2xl font-bold text-dnd-gold tracking-widest">El Grimorio del DM</h2>
+          <hr class="dnd-tapered-rule my-2">
+          <p class="text-xs text-stone-300 font-dnd-body italic">
+            "El Dungeon Master es el creador de mundos, la voz de los dioses y el tejedor del destino."
+          </p>
+        </div>
+
+        <form id="form-login" onsubmit="event.preventDefault(); handleLogin();" class="space-y-4 text-xs font-dnd-body">
+          <div>
+            <label class="block font-dnd-heading font-semibold text-dnd-goldLight uppercase tracking-wider mb-1.5">Nombre o Título del Dungeon Master</label>
+            <input id="input-alias" type="text" required placeholder="Ej: DM_Vander" value="DM_Eldritch"
+                   class="w-full px-4 py-2.5 rounded bg-black/60 border border-dnd-gold/50 text-amber-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-dnd-gold">
+          </div>
+
+          <div>
+            <label class="block font-dnd-heading font-semibold text-dnd-goldLight uppercase tracking-wider mb-1.5">Nivel de Maestría en D&amp;D</label>
+            <select id="select-exp" class="w-full px-4 py-2.5 rounded bg-black/60 border border-dnd-gold/50 text-amber-100 focus:outline-none focus:ring-1 focus:ring-dnd-gold font-dnd-body">
+              <option value="Iniciado">Iniciado (Primeras campañas dirigidas)</option>
+              <option value="Intermedio" selected>Guía Veterano (2 a 4 años dirigiendo)</option>
+              <option value="Archimago">Archimago del Rol (Más de 5 años de campañas)</option>
+            </select>
+          </div>
+
+          <div class="p-3.5 rounded bg-dnd-redDark/60 border border-dnd-gold/30">
+            <span class="font-dnd-heading font-bold text-dnd-goldLight block mb-1 flex items-center gap-1.5">
+              <span>🛡️</span> Principio de Co-Creación D&amp;D
+            </span>
+            <p class="text-[11px] text-stone-300 leading-relaxed">
+              Este artefacto <strong>no sustituye tu voz ni tu imaginación</strong>. El sistema te ayuda a procesar los trasfondos de tus jugadores, generar fichas de monstruos/NPCs y diseñar mapas tácticos antes de la sesión para ahorrarte horas de fatiga.
+            </p>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-3 px-4 rounded bg-gradient-to-r from-dnd-red via-dnd-redHover to-dnd-red hover:brightness-110 text-dnd-goldLight font-dnd-heading font-bold text-sm tracking-widest border border-dnd-gold shadow-lg transition transform active:scale-[0.99] flex items-center justify-center gap-2">
+              <span>Abrir el Cuaderno de Campaña</span> <span>⚔️</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- PANTALLA 2: DASHBOARD / BITÁCORA DE CAMPAÑA (HU-02)       -->
+    <!-- ======================================================== -->
+    <section id="screen-dashboard" class="screen-view hidden flex-1 p-6 max-w-5xl mx-auto w-full">
+      <div class="flex items-center justify-between mb-8 pb-4 border-b border-dnd-gold/40">
+        <div>
+          <h2 class="text-3xl font-dnd-title font-bold text-dnd-gold tracking-wide">Bitácora de Campañas</h2>
+          <p class="text-xs text-stone-300 font-dnd-body italic">Registro de aventuras forjadas para tu comunidad de aventureros</p>
+        </div>
+        <button onclick="switchScreen('screen-config')" class="px-5 py-2.5 rounded bg-gradient-to-r from-dnd-red to-dnd-redHover hover:brightness-110 text-dnd-goldLight font-dnd-heading font-bold text-xs tracking-wider border border-dnd-gold shadow-xl flex items-center gap-2 transition">
+          <span>🕯️</span> Forjar Nueva Sesión
+        </button>
+      </div>
+
+      <!-- Placas de Honor de Tesis / Métricas -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="tome-frame p-4 rounded-xl border border-dnd-gold/40 text-center">
+          <span class="text-xs text-stone-400 font-dnd-heading block mb-1">Aventuras Preparadas</span>
+          <span class="text-3xl font-dnd-title font-bold text-dnd-gold">2</span>
+          <span class="text-[11px] text-emerald-400 block mt-1 font-dnd-body">Registradas en el estudio</span>
+        </div>
+        <div class="tome-frame p-4 rounded-xl border border-dnd-gold/40 text-center">
+          <span class="text-xs text-stone-400 font-dnd-heading block mb-1">Tiempo Promedio (M1)</span>
+          <span class="text-3xl font-dnd-title font-bold text-amber-300">16.4 min</span>
+          <span class="text-[11px] text-stone-400 block mt-1 font-dnd-body">vs ~45 min en preparación manual</span>
+        </div>
+        <div class="tome-frame p-4 rounded-xl border border-dnd-gold/40 text-center">
+          <span class="text-xs text-stone-400 font-dnd-heading block mb-1">Elementos Válidos / Sesión (M2)</span>
+          <span class="text-3xl font-dnd-title font-bold text-dnd-goldLight">8.0</span>
+          <span class="text-[11px] text-stone-400 block mt-1 font-dnd-body">Conformes al Monster Manual / DMG</span>
+        </div>
+      </div>
+
+      <!-- Pergamino de Sesiones Pasadas -->
+      <div class="parchment-sheet rounded-xl p-6">
+        <h3 class="font-dnd-heading font-bold text-sm text-dnd-red uppercase tracking-wider mb-3 flex items-center gap-2">
+          <span>📜</span> Crónicas Anteriores
+        </h3>
+        <hr class="dnd-tapered-rule mb-4">
+        
+        <div class="space-y-3 font-dnd-body text-xs">
+          <div class="p-3.5 rounded bg-amber-100/60 border border-amber-900/20 flex items-center justify-between hover:bg-amber-100 transition">
+            <div>
+              <h4 class="font-dnd-heading font-bold text-sm text-dnd-ink">La Maldición del Vado del Cuervo</h4>
+              <p class="text-[11px] text-stone-600 italic">Tier 1 (Nivel 4) • Conexiones con el Pícaro y la Clériga • 8 Elementos aprobados</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-dnd-heading text-dnd-red font-semibold">⏱️ 17 min</span>
+              <span class="px-2.5 py-0.5 rounded bg-emerald-800 text-white font-dnd-heading text-[10px] tracking-widest uppercase">Sellada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PANTALLA 3: EL TELAR DEL DESTINO (TRAMA + TRASFONDOS DE PJ) (HU-03)       -->
+    <!-- ========================================================================= -->
+    <section id="screen-config" class="screen-view hidden flex-1 p-6 max-w-4xl mx-auto w-full flex flex-col justify-center">
+      <div class="tome-frame p-8 rounded-2xl relative shadow-2xl">
+        <div class="mb-5 pb-3 border-b border-dnd-gold/40">
+          <span class="text-xs font-dnd-heading font-bold text-dnd-gold uppercase tracking-widest block mb-1">Rito de Inicio</span>
+          <h2 class="text-2xl font-dnd-title font-bold text-dnd-goldLight tracking-wide">El Telar del Destino de la Sesión</h2>
+          <p class="text-xs text-stone-300 font-dnd-body italic">Ingresa la trama que tienes en mente y las hojas de los aventureros. La IA tejerá las ramificaciones narrativas.</p>
+        </div>
+
+        <form id="form-config" onsubmit="event.preventDefault(); startSessionWorkspace();" class="space-y-4 font-dnd-body text-xs">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-dnd-heading font-semibold text-dnd-goldLight uppercase tracking-wider mb-1">Título de la Aventura</label>
+              <input id="session-title" type="text" required value="El Misterio de la Cripta de los Cuervos"
+                     class="w-full px-4 py-2 rounded bg-black/60 border border-dnd-gold/50 text-amber-100 text-sm focus:outline-none focus:ring-1 focus:ring-dnd-gold">
+            </div>
+            <div>
+              <label class="block font-dnd-heading font-semibold text-dnd-goldLight uppercase tracking-wider mb-1">Ambientación / Atmósfera</label>
+              <select id="session-tone" class="w-full px-4 py-2 rounded bg-black/60 border border-dnd-gold/50 text-amber-100 text-sm focus:outline-none focus:ring-1 focus:ring-dnd-gold">
+                <option value="Horror Gótico / Tensión (Ravenloft)" selected>Horror Gótico / Tensión (Tipo Ravenloft)</option>
+                <option value="Fantasía Heroica Clásica (Forgotten Realms)">Fantasía Heroica (Forgotten Realms)</option>
+                <option value="Misterio e Intriga Urbana (Eberron / Waterdeep)">Misterio e Intriga (Waterdeep)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Trama del DM -->
+          <div>
+            <label class="block font-dnd-heading font-semibold text-dnd-gold uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <span>📜</span> Premisa / Trama Central Planteada por el DM
+            </label>
+            <textarea id="session-plot" rows="2" required
+                      class="w-full px-4 py-2 rounded bg-black/60 border border-dnd-gold/50 text-amber-100 text-xs focus:outline-none focus:ring-1 focus:ring-dnd-gold placeholder-stone-500">Un antiguo culto ha comenzado a raptar herreros en un pueblo minero para forjar los engranajes de un coloso arcano sellado en las profundidades de la mina.</textarea>
+          </div>
+
+          <!-- Fichas y Trasfondos de los Jugadores -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="font-dnd-heading font-semibold text-dnd-goldLight uppercase tracking-wider flex items-center gap-1.5">
+                <span>👥</span> Grupo de Aventureros (Fichas y Trasfondos)
+              </label>
+              <span class="text-[11px] text-amber-300/70 italic">La IA vinculará a estos personajes con tu trama</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <!-- Jugador 1 -->
+              <div class="parchment-sheet p-3 rounded-lg border border-dnd-gold text-dnd-ink">
+                <div class="flex items-center justify-between border-b border-dnd-red/30 pb-1 mb-1.5">
+                  <span class="font-dnd-heading font-bold text-xs text-dnd-red">Corrin Vale</span>
+                  <span class="font-dnd-heading text-[10px] px-1.5 py-0.2 rounded bg-dnd-red text-white">Pícaro (Niv. 4)</span>
+                </div>
+                <p class="text-[11px] leading-snug"><strong>Trasfondo:</strong> Busca la daga de su familia, robada por un mercader con el sello del <em>Cuervo Negro</em>.</p>
+              </div>
+
+              <!-- Jugador 2 -->
+              <div class="parchment-sheet p-3 rounded-lg border border-dnd-gold text-dnd-ink">
+                <div class="flex items-center justify-between border-b border-dnd-red/30 pb-1 mb-1.5">
+                  <span class="font-dnd-heading font-bold text-xs text-dnd-red">Hermana Elora</span>
+                  <span class="font-dnd-heading text-[10px] px-1.5 py-0.2 rounded bg-amber-800 text-white">Clériga (Niv. 4)</span>
+                </div>
+                <p class="text-[11px] leading-snug"><strong>Trasfondo:</strong> Perturbada por una visión de una <em>llama sacrílega</em> que brota de las entrañas de la tierra.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-center justify-between border-t border-dnd-gold/30">
+            <button type="button" onclick="switchScreen('screen-dashboard')" class="text-xs text-stone-400 hover:text-stone-200 font-dnd-heading">
+              ← Volver
+            </button>
+            <button type="submit" class="py-2.5 px-6 rounded bg-gradient-to-r from-dnd-red via-dnd-redHover to-dnd-red hover:brightness-110 text-dnd-goldLight font-dnd-heading font-bold text-xs tracking-wider border border-dnd-gold shadow-lg transition">
+              Comenzar Preparación Asistida →
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PANTALLA 4: TALLER DE CO-CREACIÓN Y STAT BLOCKS DE D&D (HU-04..09)        -->
+    <!-- ========================================================================= -->
+    <section id="screen-workspace" class="screen-view hidden flex-1 flex flex-col p-6 max-w-7xl mx-auto w-full">
+      <!-- Encabezado con recordatorio del rol del DM -->
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-dnd-gold/40">
+        <div>
+          <span class="text-[10px] font-dnd-heading uppercase tracking-widest px-2.5 py-0.5 rounded bg-dnd-red/60 text-dnd-goldLight border border-dnd-gold/40">
+            Rol del DM: Árbitro Creativo y Decisor Final
+          </span>
+          <h2 id="workspace-session-title" class="text-xl font-dnd-title font-bold text-dnd-gold mt-1">El Misterio de la Cripta de los Cuervos</h2>
+          <p id="workspace-session-meta" class="text-xs text-stone-300 font-dnd-body italic">Vinculando trasfondos de Corrin Vale y Hermana Elora</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="openFinishModal()" class="px-5 py-2 rounded bg-gradient-to-r from-emerald-800 to-teal-800 hover:brightness-110 text-white font-dnd-heading text-xs font-bold border border-emerald-400/50 shadow-xl transition flex items-center gap-2">
+            <span>🏁</span> Concluir Preparación (Detener M1)
+          </button>
+        </div>
+      </div>
+
+      <!-- Columnas: Asistente D&D vs Elementos Validados -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+
+        <!-- Columna Izquierda: Generador Asistido con estética D&D 5e (7 cols) -->
+        <div class="lg:col-span-7 flex flex-col gap-3">
+          <!-- Pestañas de preparación -->
+          <div class="flex items-center gap-2 border-b border-dnd-gold/30 pb-2">
+            <button onclick="setGenerationTab('trama')" id="tab-btn-trama" class="tab-btn px-3 py-1.5 rounded text-xs font-dnd-heading font-bold bg-dnd-red text-dnd-goldLight border border-dnd-gold transition">
+              1. Trama No Lineal (HU-05)
+            </button>
+            <button onclick="setGenerationTab('npc')" id="tab-btn-npc" class="tab-btn px-3 py-1.5 rounded text-xs font-dnd-heading font-bold text-stone-400 hover:text-amber-200 bg-black/60 border border-stone-800 transition">
+              2. Stat Block NPC 5e (HU-06)
+            </button>
+            <button onclick="setGenerationTab('mapa')" id="tab-btn-mapa" class="tab-btn px-3 py-1.5 rounded text-xs font-dnd-heading font-bold text-stone-400 hover:text-amber-200 bg-black/60 border border-stone-800 transition">
+              3. Mapa Táctico 5ft (HU-07)
+            </button>
+          </div>
+
+          <!-- Panel de Asistencia / Editor -->
+          <div class="tome-frame p-5 rounded-xl border border-dnd-gold/50 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span id="tab-action-label" class="font-dnd-heading font-bold text-xs text-dnd-goldLight block">Conexión de Trama y Ramas No Lineales</span>
+                <span class="text-[11px] text-stone-400 font-dnd-body italic">La IA cruza tu premisa con los trasfondos de tus jugadores</span>
+              </div>
+              <button id="btn-generate" onclick="simulateAIGeneration()" class="px-3.5 py-1.5 rounded bg-dnd-red hover:bg-dnd-redHover text-dnd-goldLight font-dnd-heading font-bold text-xs border border-dnd-gold shadow flex items-center gap-1.5 transition">
+                <span>⚡</span> <span id="ai-btn-text">Consultar al Oráculo IA</span>
+              </button>
+            </div>
+
+            <!-- Área de edición de texto -->
+            <div class="relative">
+              <textarea id="ai-editor" rows="9" placeholder="Pulsa 'Consultar al Oráculo IA' para recibir propuestas que conecten las historias de tus aventureros..."
+                        class="w-full px-4 py-3 rounded bg-black/70 border border-dnd-gold/40 text-amber-100 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-dnd-gold font-dnd-body custom-scroll"></textarea>
+              <div id="ai-loader" class="hidden absolute inset-0 bg-dnd-wood/90 rounded flex items-center justify-center gap-3 backdrop-blur-sm border border-dnd-gold/40">
+                <div class="text-2xl animate-spin">🎲</div>
+                <span class="text-xs font-dnd-heading text-dnd-goldLight">Tirando dados de narración y cruzando historias...</span>
+              </div>
+            </div>
+
+            <!-- Rúbrica de Elemento Válido (M2) -->
+            <div class="p-3 rounded bg-dnd-redDark/50 border border-dnd-gold/30 flex flex-col gap-1">
+              <span class="text-[11px] font-dnd-heading font-bold text-dnd-gold uppercase tracking-wider flex items-center gap-1.5">
+                <span>⚖️</span> Rúbrica de Validación del Dungeon Master (M2)
+              </span>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-stone-300 font-dnd-body">
+                <label class="flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" id="check-c1" checked class="accent-dnd-red">
+                  <span>Conecta con los aventureros</span>
+                </label>
+                <label class="flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" id="check-c2" checked class="accent-dnd-red">
+                  <span>Utilidad inmediata en mesa</span>
+                </label>
+                <label class="flex items-center gap-1.5 cursor-pointer">
+                  <input type="checkbox" id="check-c3" checked class="accent-dnd-red">
+                  <span>Aprobado por el criterio del DM</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Botón de Aprobación Humana -->
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-[11px] text-stone-400 font-dnd-body italic">Tú editas el texto a tu gusto antes de añadirlo.</span>
+              <button onclick="addValidatedElement()" class="px-4 py-2 rounded bg-gradient-to-r from-dnd-goldDark via-dnd-gold to-dnd-goldLight hover:brightness-110 text-dnd-wood font-dnd-heading font-bold text-xs border border-amber-200 shadow-lg transition flex items-center gap-2">
+                <span>✓</span> Sellar y Añadir a la Sesión (+1 M2)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: El Pergamino de la Sesión Lista (5 cols) -->
+        <div class="lg:col-span-5 flex flex-col">
+          <div class="parchment-sheet p-5 rounded-xl flex-1 flex flex-col shadow-2xl">
+            <div class="flex items-center justify-between mb-2 pb-2 border-b border-dnd-red/30">
+              <div>
+                <h3 class="font-dnd-heading font-bold text-xs text-dnd-red uppercase tracking-wider flex items-center gap-1.5">
+                  <span>📜</span> Hojas y Elementos Aprobados
+                </h3>
+                <span class="text-[11px] text-stone-600 font-dnd-body italic">Material listo para dirigir en mesa</span>
+              </div>
+              <span id="validated-badge" class="px-2.5 py-0.5 rounded bg-dnd-red text-dnd-goldLight font-dnd-heading font-bold text-xs border border-dnd-gold">
+                0 elementos
+              </span>
+            </div>
+
+            <!-- Lista de elementos incorporados con estilo D&D -->
+            <div id="elements-list" class="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[460px] custom-scroll">
+              <div id="empty-elements-hint" class="h-56 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-amber-900/30 rounded-lg text-stone-600 text-xs font-dnd-body">
+                <span class="text-3xl mb-2 opacity-60">📖</span>
+                Aún no has sellado ningún elemento.<br>Pide una propuesta a la IA, ajústala a tu gusto y pulsa "Sellar y Añadir".
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- PANTALLA 5 / MODAL: JUICIO DE SATISFACCIÓN (M3 / LIKERT) -->
+    <!-- ======================================================== -->
+    <div id="modal-satisfaction" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="tome-frame w-full max-w-lg p-6 rounded-2xl border-2 border-dnd-gold shadow-2xl">
+        <div class="text-center mb-5">
+          <div class="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-2xl mb-2">
+            ⭐
+          </div>
+          <h3 class="font-dnd-title text-xl font-bold text-dnd-gold">Juicio del Dungeon Master</h3>
+          <p class="text-xs text-stone-300 font-dnd-body italic">Cuestionario sobre la experiencia de asistencia y co-creación previa (M3)</p>
+        </div>
+
+        <form id="form-likert" onsubmit="event.preventDefault(); submitSatisfaction();" class="space-y-3 text-xs font-dnd-body">
+          <div class="p-3 rounded bg-black/60 border border-dnd-gold/30">
+            <p class="font-dnd-heading text-amber-200 mb-2">1. La IA conectó con éxito los trasfondos de mis jugadores con mi trama sin quitarme la libertad creativa.</p>
+            <div class="flex items-center justify-between text-[11px] text-stone-400">
+              <span>Desacuerdo (1)</span>
+              <div class="flex gap-4">
+                <label class="cursor-pointer"><input type="radio" name="p1" value="1" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p1" value="2" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p1" value="3" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p1" value="4" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p1" value="5" checked class="accent-dnd-red"></label>
+              </div>
+              <span class="text-dnd-goldLight">Total Acuerdo (5)</span>
+            </div>
+          </div>
+
+          <div class="p-3 rounded bg-black/60 border border-dnd-gold/30">
+            <p class="font-dnd-heading text-amber-200 mb-2">2. El tiempo invertido en preparar los stat blocks de NPCs y el mapa fue notablemente inferior a mi método manual.</p>
+            <div class="flex items-center justify-between text-[11px] text-stone-400">
+              <span>Desacuerdo (1)</span>
+              <div class="flex gap-4">
+                <label class="cursor-pointer"><input type="radio" name="p2" value="1" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p2" value="2" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p2" value="3" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p2" value="4" checked class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p2" value="5" class="accent-dnd-red"></label>
+              </div>
+              <span class="text-dnd-goldLight">Total Acuerdo (5)</span>
+            </div>
+          </div>
+
+          <div class="p-3 rounded bg-black/60 border border-dnd-gold/30">
+            <p class="font-dnd-heading text-amber-200 mb-2">3. Las ramificaciones no lineales propuestas enriquecieron las opciones de decisión para los jugadores.</p>
+            <div class="flex items-center justify-between text-[11px] text-stone-400">
+              <span>Desacuerdo (1)</span>
+              <div class="flex gap-4">
+                <label class="cursor-pointer"><input type="radio" name="p3" value="1" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p3" value="2" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p3" value="3" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p3" value="4" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p3" value="5" checked class="accent-dnd-red"></label>
+              </div>
+              <span class="text-dnd-goldLight">Total Acuerdo (5)</span>
+            </div>
+          </div>
+
+          <div class="p-3 rounded bg-black/60 border border-dnd-gold/30">
+            <p class="font-dnd-heading text-amber-200 mb-2">4. Nivel general de satisfacción con el material final preparado para dirigir.</p>
+            <div class="flex items-center justify-between text-[11px] text-stone-400">
+              <span>Desacuerdo (1)</span>
+              <div class="flex gap-4">
+                <label class="cursor-pointer"><input type="radio" name="p4" value="1" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p4" value="2" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p4" value="3" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p4" value="4" class="accent-dnd-red"></label>
+                <label class="cursor-pointer"><input type="radio" name="p4" value="5" checked class="accent-dnd-red"></label>
+              </div>
+              <span class="text-dnd-goldLight">Total Acuerdo (5)</span>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" class="w-full py-2.5 rounded bg-gradient-to-r from-dnd-red via-dnd-redHover to-dnd-red hover:brightness-110 text-dnd-goldLight font-dnd-heading font-bold text-xs border border-dnd-gold shadow-lg transition">
+              Sellar Juicio y Ver Informe de Métricas →
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- PANTALLA 6: CRÓNICA FINAL Y MÉTRICAS REGISTRADAS (HU-12) -->
+    <!-- ======================================================== -->
+    <section id="screen-summary" class="screen-view hidden flex-1 p-6 max-w-4xl mx-auto w-full flex flex-col justify-center">
+      <div class="tome-frame p-8 rounded-2xl shadow-2xl relative">
+        <div class="text-center mb-8">
+          <div class="wax-seal w-14 h-14 rounded-full mx-auto flex items-center justify-center text-2xl mb-2">
+            ⚔️
+          </div>
+          <h2 class="text-3xl font-dnd-title font-bold text-dnd-gold tracking-wide">Sesión de D&amp;D Sellada</h2>
+          <hr class="dnd-tapered-rule my-2">
+          <p class="text-xs text-stone-300 font-dnd-body italic">Las 3 métricas experimentales han sido registradas para la contrastación de hipótesis</p>
+        </div>
+
+        <!-- Las 3 Métricas en Placas de Latón -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div class="p-5 rounded-xl bg-black/60 border border-dnd-gold/40 text-center">
+            <span class="text-xs font-dnd-heading text-stone-400 block mb-1">M1: Tiempo Invertido</span>
+            <span id="final-metric-time" class="text-3xl font-bold font-mono text-amber-300">13:45</span>
+            <span class="text-[11px] text-stone-500 block mt-1 font-dnd-body">Minutos cronometrados</span>
+          </div>
+
+          <div class="p-5 rounded-xl bg-black/60 border border-dnd-gold/40 text-center">
+            <span class="text-xs font-dnd-heading text-stone-400 block mb-1">M2: Elementos Válidos</span>
+            <span id="final-metric-elements" class="text-3xl font-dnd-title font-bold text-dnd-goldLight">3</span>
+            <span class="text-[11px] text-stone-500 block mt-1 font-dnd-body">Conformes al Monster Manual / DMG</span>
+          </div>
+
+          <div class="p-5 rounded-xl bg-black/60 border border-dnd-gold/40 text-center">
+            <span class="text-xs font-dnd-heading text-stone-400 block mb-1">M3: Satisfacción Likert</span>
+            <span id="final-metric-likert" class="text-3xl font-dnd-title font-bold text-emerald-400">4.75 / 5.0</span>
+            <span class="text-[11px] text-stone-500 block mt-1 font-dnd-body">Juicio del Dungeon Master</span>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-4 border-t border-dnd-gold/30">
+          <button onclick="switchScreen('screen-dashboard')" class="text-xs text-stone-400 hover:text-stone-200 font-dnd-heading">
+            ← Volver a la Bitácora
+          </button>
+          <div class="flex gap-3 font-dnd-heading">
+            <button onclick="alert('Notas estructuradas con conexiones de jugadores y stat blocks de D&D copiadas al portapapeles.');" class="px-4 py-2 rounded bg-black/60 hover:bg-black/90 text-xs font-medium text-amber-200 border border-dnd-gold/50 transition">
+              📋 Copiar Resumen para la Partida
+            </button>
+            <button onclick="switchScreen('screen-login')" class="px-5 py-2 rounded bg-dnd-red hover:bg-dnd-redHover text-xs font-bold text-dnd-goldLight border border-dnd-gold shadow-lg transition">
+              Forjar Nueva Sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- BARRA INFERIOR DE SUSTENTACIÓN CON ESTILO D&D           -->
+  <!-- ======================================================== -->
+  <footer class="bg-dnd-wood border-t border-dnd-gold/40 px-6 py-2 flex items-center justify-between text-xs text-amber-200/80 z-30">
+    <div class="flex items-center gap-2">
+      <span class="font-dnd-heading text-dnd-gold">Atajos para el Docente:</span>
+      <div class="flex gap-1.5 overflow-x-auto font-dnd-heading text-[11px]">
+        <button onclick="switchScreen('screen-login')" class="px-2.5 py-0.5 rounded bg-dnd-red/40 hover:bg-dnd-red text-amber-100 border border-dnd-gold/30">1. Portada Grimorio</button>
+        <button onclick="switchScreen('screen-dashboard')" class="px-2.5 py-0.5 rounded bg-dnd-red/40 hover:bg-dnd-red text-amber-100 border border-dnd-gold/30">2. Bitácora</button>
+        <button onclick="switchScreen('screen-config')" class="px-2.5 py-0.5 rounded bg-dnd-red/40 hover:bg-dnd-red text-amber-100 border border-dnd-gold/30">3. Telar (Trama + PJs)</button>
+        <button onclick="switchScreen('screen-workspace')" class="px-2.5 py-0.5 rounded bg-dnd-red/40 hover:bg-dnd-red text-amber-100 border border-dnd-gold/30">4. Taller Co-creación</button>
+        <button onclick="openFinishModal()" class="px-2.5 py-0.5 rounded bg-dnd-red/40 hover:bg-dnd-red text-amber-100 border border-dnd-gold/30">5. Juicio Likert</button>
+        <button onclick="switchScreen('screen-summary')" class="px-2.5 py-0.5 rounded bg-dnd-red/40 hover:bg-dnd-red text-amber-100 border border-dnd-gold/30">6. Métricas Finales</button>
+      </div>
+    </div>
+    <span class="hidden md:inline text-[11px] text-stone-400 font-dnd-body italic">Tesis Ingeniería de Computación y Sistemas • UPAO 2026</span>
+  </footer>
+
+  <!-- SCRIPT INTERACTIVO -->
+  <script>
+    let currentUserName = "DM_Eldritch";
+    let timerInterval = null;
+    let secondsElapsed = 0;
+    let validatedElementsCount = 0;
+    let currentTab = 'trama';
+    let validatedElementsList = [];
+
+    // Muestras auténticas de D&D 5ª Edición
+    const aiSamples = {
+      trama: `### 📜 RAMIFICACIONES DEL DESTINO (CONEXIÓN DE TRASFONDOS)
+
+* **Impacto en Corrin Vale (Pícaro):**
+  El maestro forjador secuestrado, *Vornak*, fue quien grabó originalmente el emblema del *Cuervo Negro* en la daga robada del padre de Corrin. Vornak revelará que el mercader responde al nombre de 'El Alquimista Pálido'.
+
+* **Impacto en Hermana Elora (Clériga):**
+  La *llama sacrílega* de su profecía arde en el foso central de la forja: es fuego alquímico profanado que drena la vitalidad de la montaña para animar el metal.
+
+**Bifurcaciones Tácticas para los Aventureros:**
+* **Opción A (Infiltración de Corrin):** Forzar las esclusas de ventilación superiores (Prueba de Destreza / Sigilo CD 14) para cortar los fuelles de la forja sin alertar a los guardias.
+* **Opción B (Purificación de Elora):** Realizar un rito de consagración sobre el crisol (Prueba de Religión CD 15) que debilita temporalmente a los autómatas.
+* **Opción C (Conflicto Frontal):** Destruir los soportes de madera de la vagoneta central para bloquear la salida del convoy.`,
+      
+      npc: `### 🐉 STAT BLOCK D&D 5e: MAESTRO FORJADOR VORNAK
+*Humanoide Mediano (Enano de las Colinas), Legal Bueno*
+___
+* **Clase de Armadura (CA):** 14 (Cota de escamas de herrero)
+* **Puntos de Golpe (PG):** 38 (5d8 + 15)
+* **Velocidad:** 25 pies
+___
+| FUE | DES | CON | INT | SAB | CAR |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 16 (+3) | 10 (+0) | 16 (+3) | 13 (+1) | 14 (+2) | 9 (-1) |
+___
+* **Habilidades:** Atletismo +5, Historia +3, Perspicacia +4
+* **Sentidos:** Visión en la oscuridad 60 pies, Percepción pasiva 12
+* **Idiomas:** Común, Enano
+* **Desafío (VD):** 1 (200 PX)
+___
+**Resistencia Enana.** Vornak tiene ventaja en tiradas de salvación contra veneno.
+**Vínculo con Corrin Vale.** Reconoce el estilo de esgrima de Corrin y le entregará una llave secreta de la mina si se gana su confianza.
+___
+**ACCIONES**
+* **Martillo de Fragua.** *Ataque de arma cuerpo a cuerpo:* +5 a impactar, alcance 5 pies, un objetivo. *Impacto:* 7 (1d8 + 3) de daño contundente más 3 (1d6) de daño de fuego.`,
+      
+      mapa: `### 🗺️ ESPECIFICACIÓN DEL MAPA TÁCTICO: LA FORJA OLVIDADA
+*Escala de Cuadrícula: 1 casilla = 5 pies cuadrados (30 x 40 casillas)*
+___
+* **Zona 1 - El Andén de las Vagonetas (Casillas A1 a G15):**
+  - *Terreno Difícil:* Escombros y escoria de hierro. Reduce la velocidad a la mitad.
+  - *Cobertura:* Las vagonetas de mineral otorgan Cobertura Media (+2 a la CA y salvaciones de Destreza).
+
+* **Zona 2 - El Crisol Alquímico (Casillas M15 a R25):**
+  - *Peligro Ambiental:* Radio de 10 pies emite calor extremo. Una criatura que empiece su turno en el foso sufre 2d6 de daño de fuego.
+  - *Mecánica Táctica:* Una palanca de contrapeso en P14 permite liberar vapor caliente (ceguera temporal por 1 asalto).
+
+* **Zona 3 - El Yunque Ancestral (Casillas T28 a Z38):**
+  - Plataforma elevada a 10 pies. Otorga Ventaja a tiradores a distancia contra criaturas en el andén.`
+    };
+
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen-view').forEach(s => s.classList.add('hidden'));
+      const target = document.getElementById(screenId);
+      if (target) target.classList.remove('hidden');
+
+      const liveMetrics = document.getElementById('live-metrics-bar');
+      const userBadge = document.getElementById('user-badge');
+
+      if (screenId === 'screen-workspace') {
+        liveMetrics.classList.remove('hidden');
+        userBadge.classList.remove('hidden');
+      } else if (screenId === 'screen-summary' || screenId === 'screen-dashboard') {
+        liveMetrics.classList.add('hidden');
+        userBadge.classList.remove('hidden');
+      } else {
+        liveMetrics.classList.add('hidden');
+        userBadge.classList.add('hidden');
+      }
+    }
+
+    function handleLogin() {
+      const alias = document.getElementById('input-alias').value.trim();
+      if (alias) {
+        currentUserName = alias;
+        document.getElementById('header-user-name').innerText = alias;
+      }
+      switchScreen('screen-dashboard');
+    }
+
+    function startSessionWorkspace() {
+      const title = document.getElementById('session-title').value;
+      const tone = document.getElementById('session-tone').value;
+
+      document.getElementById('workspace-session-title').innerText = title;
+      document.getElementById('workspace-session-meta').innerText = `${tone} • Conexión de trasfondos activa`;
+
+      secondsElapsed = 0;
+      validatedElementsCount = 0;
+      validatedElementsList = [];
+      updateElementsDisplay();
+      setGenerationTab('trama');
+
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+      }, 1000);
+
+      switchScreen('screen-workspace');
+    }
+
+    function setGenerationTab(tab) {
+      currentTab = tab;
+      const labels = {
+        trama: 'Conexión de Trama y Ramas No Lineales (HU-05)',
+        npc: 'Stat Block Oficial de NPC D&D 5e (HU-06)',
+        mapa: 'Especificación del Mapa Táctico de 5 pies (HU-07)'
+      };
+      document.getElementById('tab-action-label').innerText = labels[tab];
+      document.getElementById('ai-editor').value = '';
+
+      ['trama', 'npc', 'mapa'].forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (t === tab) {
+          btn.className = 'tab-btn px-3 py-1.5 rounded text-xs font-dnd-heading font-bold bg-dnd-red text-dnd-goldLight border border-dnd-gold transition';
+        } else {
+          btn.className = 'tab-btn px-3 py-1.5 rounded text-xs font-dnd-heading font-bold text-stone-400 hover:text-amber-200 bg-black/60 border border-stone-800 transition';
+        }
+      });
+    }
+
+    function simulateAIGeneration() {
+      const loader = document.getElementById('ai-loader');
+      const btn = document.getElementById('btn-generate');
+      loader.classList.remove('hidden');
+      btn.disabled = true;
+
+      setTimeout(() => {
+        loader.classList.add('hidden');
+        btn.disabled = false;
+        document.getElementById('ai-editor').value = aiSamples[currentTab];
+      }, 900);
+    }
+
+    function addValidatedElement() {
+      const content = document.getElementById('ai-editor').value.trim();
+      if (!content) {
+        alert('Por favor invoca una propuesta al oráculo o redacta contenido antes de sellarlo.');
+        return;
+      }
+
+      const titles = {
+        trama: 'Trama No Lineal y Destinos',
+        npc: 'Ficha de NPC (Stat Block 5e)',
+        mapa: 'Mapa Táctico y Encuentro'
+      };
+
+      validatedElementsCount++;
+      validatedElementsList.push({
+        type: titles[currentTab],
+        text: content
+      });
+
+      document.getElementById('ai-editor').value = '';
+      updateElementsDisplay();
+
+      if (currentTab === 'trama') setGenerationTab('npc');
+      else if (currentTab === 'npc') setGenerationTab('mapa');
+    }
+
+    function updateElementsDisplay() {
+      document.getElementById('valid-count-display').innerText = validatedElementsCount;
+      document.getElementById('validated-badge').innerText = `${validatedElementsCount} sellados`;
+
+      const listContainer = document.getElementById('elements-list');
+      if (validatedElementsList.length === 0) {
+        listContainer.innerHTML = `
+          <div id="empty-elements-hint" class="h-56 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-amber-900/30 rounded-lg text-stone-600 text-xs font-dnd-body">
+            <span class="text-3xl mb-2 opacity-60">📖</span>
+            Aún no has sellado ningún elemento.<br>Pide una propuesta a la IA, ajústala a tu gusto y pulsa "Sellar y Añadir".
+          </div>`;
+        return;
+      }
+
+      listContainer.innerHTML = validatedElementsList.map((item, idx) => `
+        <div class="p-3.5 rounded bg-amber-100/80 border border-amber-900/30 shadow-sm text-dnd-ink font-dnd-body">
+          <div class="flex items-center justify-between mb-1.5 border-b border-amber-900/20 pb-1">
+            <span class="font-dnd-heading font-bold text-[11px] text-dnd-red uppercase tracking-wider">
+              #${idx + 1} ${item.type}
+            </span>
+            <span class="text-[10px] text-emerald-800 font-dnd-heading font-bold">✓ Sellado por el DM</span>
+          </div>
+          <p class="text-[11px] font-mono leading-relaxed line-clamp-4 whitespace-pre-line text-stone-800">${item.text}</p>
+        </div>
+      `).join('');
+    }
+
+    function openFinishModal() {
+      if (timerInterval) clearInterval(timerInterval);
+      document.getElementById('modal-satisfaction').classList.remove('hidden');
+    }
+
+    function submitSatisfaction() {
+      document.getElementById('modal-satisfaction').classList.add('hidden');
+
+      const form = document.getElementById('form-likert');
+      const formData = new FormData(form);
+      let sum = 0, count = 0;
+      for (let [key, val] of formData.entries()) {
+        sum += parseFloat(val);
+        count++;
+      }
+      const avgLikert = (count > 0 ? (sum / count) : 4.5).toFixed(2);
+
+      const mins = Math.floor(secondsElapsed / 60);
+      const secs = secondsElapsed % 60;
+      const formattedTime = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')} min`;
+
+      document.getElementById('final-metric-time').innerText = formattedTime;
+      document.getElementById('final-metric-elements').innerText = validatedElementsCount;
+      document.getElementById('final-metric-likert').innerText = `${avgLikert} / 5.0`;
+
+      switchScreen('screen-summary');
+    }
+  </script>
+</body>
+</html>
