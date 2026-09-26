@@ -1,0 +1,52 @@
+(function(){let e=document.createElement(`link`).relList;if(e&&e.supports&&e.supports(`modulepreload`))return;for(let e of document.querySelectorAll(`link[rel="modulepreload"]`))n(e);new MutationObserver(e=>{for(let t of e)if(t.type===`childList`)for(let e of t.addedNodes)e.tagName===`LINK`&&e.rel===`modulepreload`&&n(e)}).observe(document,{childList:!0,subtree:!0});function t(e){let t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),t.credentials=e.crossOrigin===`use-credentials`?`include`:e.crossOrigin===`anonymous`?`omit`:`same-origin`,t}function n(e){if(e.ep)return;e.ep=!0;let n=t(e);fetch(e.href,n)}})();var e={currentUserName:`DM_Eldritch`,timerInterval:null,secondsElapsed:0,validatedElementsCount:0,currentTab:`trama`,validatedElementsList:[]};function t(e){document.querySelectorAll(`.screen-view`).forEach(e=>e.classList.add(`hidden`));let t=document.getElementById(e);t&&t.classList.remove(`hidden`);let n=document.getElementById(`live-metrics-bar`),r=document.getElementById(`user-badge`);n&&r&&(e===`screen-workspace`?(n.classList.remove(`hidden`),r.classList.remove(`hidden`)):e===`screen-summary`||e===`screen-dashboard`?(n.classList.add(`hidden`),r.classList.remove(`hidden`)):(n.classList.add(`hidden`),r.classList.add(`hidden`)))}function n(){let e=document.getElementById(`btn-reset-grimorio`);e&&e.addEventListener(`click`,()=>{t(`screen-login`)})}var r={trama:`### 📜 RAMIFICACIONES DEL DESTINO (CONEXIÓN DE TRASFONDOS)
+
+* **Impacto en Corrin Vale (Pícaro):**
+  El maestro forjador secuestrado, *Vornak*, fue quien grabó originalmente el emblema del *Cuervo Negro* en la daga robada del padre de Corrin. Vornak revelará que el mercader responde al nombre de 'El Alquimista Pálido'.
+
+* **Impacto en Hermana Elora (Clériga):**
+  La *llama sacrílega* de su profecía arde en el foso central de la forja: es fuego alquímico profanado que drena la vitalidad de la montaña para animar el metal.
+
+**Bifurcaciones Tácticas para los Aventureros:**
+* **Opción A (Infiltración de Corrin):** Forzar las esclusas de ventilación superiores (Prueba de Destreza / Sigilo CD 14) para cortar los fuelles de la forja sin alertar a los guardias.
+* **Opción B (Purificación de Elora):** Realizar un rito de consagración sobre el crisol (Prueba de Religión CD 15) que debilita temporalmente a los autómatas.
+* **Opción C (Conflicto Frontal):** Destruir los soportes de madera de la vagoneta central para bloquear la salida del convoy.`,npc:`### 🐉 STAT BLOCK D&D 5e: MAESTRO FORJADOR VORNAK
+*Humanoide Mediano (Enano de las Colinas), Legal Bueno*
+___
+* **Clase de Armadura (CA):** 14 (Cota de escamas de herrero)
+* **Puntos de Golpe (PG):** 38 (5d8 + 15)
+* **Velocidad:** 25 pies
+___
+| FUE | DES | CON | INT | SAB | CAR |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 16 (+3) | 10 (+0) | 16 (+3) | 13 (+1) | 14 (+2) | 9 (-1) |
+___
+* **Habilidades:** Atletismo +5, Historia +3, Perspicacia +4
+* **Sentidos:** Visión en la oscuridad 60 pies, Percepción pasiva 12
+* **Idiomas:** Común, Enano
+* **Desafío (VD):** 1 (200 PX)
+___
+**Resistencia Enana.** Vornak tiene ventaja en tiradas de salvación contra veneno.
+**Vínculo con Corrin Vale.** Reconoce el estilo de esgrima de Corrin y le entregará una llave secreta de la mina si se gana su confianza.
+___
+**ACCIONES**
+* **Martillo de Fragua.** *Ataque de arma cuerpo a cuerpo:* +5 a impactar, alcance 5 pies, un objetivo. *Impacto:* 7 (1d8 + 3) de daño contundente más 3 (1d6) de daño de fuego.`,mapa:`### 🗺️ ESPECIFICACIÓN DEL MAPA TÁCTICO: LA FORJA OLVIDADA
+*Escala de Cuadrícula: 1 casilla = 5 pies cuadrados (30 x 40 casillas)*
+___
+* **Zona 1 - El Andén de las Vagonetas (Casillas A1 a G15):**
+  - *Terreno Difícil:* Escombros y escoria de hierro. Reduce la velocidad a la mitad.
+  - *Cobertura:* Las vagonetas de mineral otorgan Cobertura Media (+2 a la CA y salvaciones de Destreza).
+
+* **Zona 2 - El Crisol Alquímico (Casillas M15 a R25):**
+  - *Peligro Ambiental:* Radio de 10 pies emite calor extremo. Una criatura que empiece su turno en el foso sufre 2d6 de daño de fuego.
+  - *Mecánica Táctica:* Una palanca de contrapeso en P14 permite liberar vapor caliente (ceguera temporal por 1 asalto).
+
+* **Zona 3 - El Yunque Ancestral (Casillas T28 a Z38):**
+  - Plataforma elevada a 10 pies. Otorga Ventaja a tiradores a distancia contra criaturas en el andén.`};function i(){e.secondsElapsed=0,e.timerInterval&&clearInterval(e.timerInterval),e.timerInterval=setInterval(()=>{e.secondsElapsed++;let t=Math.floor(e.secondsElapsed/60).toString().padStart(2,`0`),n=(e.secondsElapsed%60).toString().padStart(2,`0`);document.getElementById(`timer-display`).innerText=`${t}:${n}`},1e3)}function a(){e.timerInterval&&clearInterval(e.timerInterval)}function o(t){e.currentTab=t,document.querySelectorAll(`.tab-btn`).forEach(e=>{e.classList.remove(`bg-dnd-red`,`text-dnd-goldLight`,`border-dnd-gold`),e.classList.add(`bg-black/60`,`text-stone-400`,`border-stone-800`)});let n=document.getElementById(`tab-btn-${t}`);n.classList.remove(`bg-black/60`,`text-stone-400`,`border-stone-800`),n.classList.add(`bg-dnd-red`,`text-dnd-goldLight`,`border-dnd-gold`);let r=document.getElementById(`tab-action-label`),i=document.getElementById(`ai-btn-text`);t===`trama`?(r.innerText=`Conexión de Trama y Ramas No Lineales`,i.innerText=`Consultar al Oráculo IA`):t===`npc`?(r.innerText=`Generación de Stat Block 5e`,i.innerText=`Forjar NPC Mágico`):t===`mapa`&&(r.innerText=`Diseño de Mapa Táctico Grid 5ft`,i.innerText=`Trazar Plano de Batalla`),document.getElementById(`ai-editor`).value=``}function s(){document.getElementById(`ai-loader`).classList.remove(`hidden`),document.getElementById(`btn-generate`).disabled=!0,setTimeout(()=>{document.getElementById(`ai-editor`).value=r[e.currentTab],document.getElementById(`ai-loader`).classList.add(`hidden`),document.getElementById(`btn-generate`).disabled=!1},1200)}function c(){let t=document.getElementById(`ai-editor`).value.trim(),n=document.getElementById(`check-c1`).checked,r=document.getElementById(`check-c2`).checked,i=document.getElementById(`check-c3`).checked;if(!t){alert(`No hay pergamino que sellar. Pide primero una propuesta a la IA.`);return}if(!n||!r||!i){alert(`El Dungeon Master debe validar los 3 criterios de la rúbrica (M2) para sellar el elemento.`);return}let a=`Elemento`,o=`text-stone-400`;e.currentTab===`trama`&&(a=`Trama / Ramificación`,o=`text-purple-400`),e.currentTab===`npc`&&(a=`Stat Block 5e`,o=`text-red-400`),e.currentTab===`mapa`&&(a=`Mapa Táctico`,o=`text-blue-400`),e.validatedElementsList.push({type:a,content:t}),e.validatedElementsCount++,document.getElementById(`valid-count-display`).innerText=e.validatedElementsCount,document.getElementById(`validated-badge`).innerText=`${e.validatedElementsCount} elementos`;let s=document.getElementById(`empty-elements-hint`);s&&(s.style.display=`none`);let c=t.substring(0,70).replace(/\n/g,` `)+`...`,l=`
+    <div class="p-3 rounded border border-dnd-gold/50 bg-[#e8ddbe] shadow-sm animate-fade-in">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-dnd-heading font-bold uppercase tracking-wider ${o} bg-black/80 px-1.5 py-0.5 rounded">${a}</span>
+        <span class="text-[10px] text-dnd-red font-bold flex items-center gap-1"><span>✓</span> DM Aprobado</span>
+      </div>
+      <p class="text-xs font-dnd-body text-dnd-ink leading-snug line-clamp-2">${c}</p>
+    </div>
+  `;document.getElementById(`elements-list`).insertAdjacentHTML(`beforeend`,l),document.getElementById(`ai-editor`).value=``}function l(){document.querySelectorAll(`.tab-btn`).forEach(e=>{e.addEventListener(`click`,e=>{o(e.target.getAttribute(`data-tab`))})});let e=document.getElementById(`btn-generate`);e&&e.addEventListener(`click`,s);let t=document.getElementById(`btn-add-validated`);t&&t.addEventListener(`click`,c);let n=document.getElementById(`btn-conclude-prep`);n&&n.addEventListener(`click`,f)}function u(t){let n=Math.floor(e.secondsElapsed/60).toString().padStart(2,`0`),r=(e.secondsElapsed%60).toString().padStart(2,`0`);document.getElementById(`final-metric-time`).innerText=`${n}:${r}`,document.getElementById(`final-metric-elements`).innerText=e.validatedElementsCount,document.getElementById(`final-metric-likert`).innerText=`${t} / 5.0`}function d(){let e=document.getElementById(`btn-summary-back`);e&&e.addEventListener(`click`,()=>t(`screen-dashboard`));let n=document.getElementById(`btn-copy-summary`);n&&n.addEventListener(`click`,()=>alert(`Notas estructuradas con conexiones de jugadores y stat blocks de D&D copiadas al portapapeles.`));let r=document.getElementById(`btn-forge-new`);r&&r.addEventListener(`click`,()=>t(`screen-login`))}function f(){a(),document.getElementById(`modal-satisfaction`).classList.remove(`hidden`)}function p(e){e.preventDefault();let n=document.getElementById(`form-likert`),r=new FormData(n),i=0;for(let e=1;e<=4;e++)i+=parseInt(r.get(`p${e}`));let a=(i/4).toFixed(2);document.getElementById(`modal-satisfaction`).classList.add(`hidden`),u(a),t(`screen-summary`)}function m(){let e=document.getElementById(`form-likert`);e&&e.addEventListener(`submit`,p)}function h(){document.querySelectorAll(`.nav-shortcut`).forEach(e=>{e.addEventListener(`click`,e=>{let n=e.target.getAttribute(`data-goto`);n&&t(n)})});let e=document.getElementById(`btn-open-likert`);e&&e.addEventListener(`click`,f)}function g(n){n.preventDefault();let r=document.getElementById(`input-alias`).value.trim();r&&(e.currentUserName=r,document.getElementById(`header-user-name`).innerText=r),t(`screen-dashboard`)}function _(){let e=document.getElementById(`form-login`);e&&e.addEventListener(`submit`,g)}function v(){let e=document.getElementById(`btn-forge-session`);e&&e.addEventListener(`click`,()=>{t(`screen-config`)})}function y(e){e.preventDefault();let n=document.getElementById(`session-title`).value,r=document.getElementById(`session-tone`).value;document.getElementById(`workspace-session-title`).innerText=n,document.getElementById(`workspace-session-meta`).innerText=`${r} • Conexión de trasfondos activa`,t(`screen-workspace`),i()}function b(){let e=document.getElementById(`form-config`);e&&e.addEventListener(`submit`,y);let n=document.getElementById(`btn-back-dashboard`);n&&n.addEventListener(`click`,()=>{t(`screen-dashboard`)})}document.addEventListener(`DOMContentLoaded`,()=>{n(),h(),m(),_(),v(),b(),l(),d()});

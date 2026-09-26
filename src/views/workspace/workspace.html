@@ -1,0 +1,103 @@
+<section id="screen-workspace" class="screen-view hidden flex-1 flex flex-col p-6 max-w-7xl mx-auto w-full">
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-dnd-gold/40">
+    <div>
+      <span class="text-[10px] font-dnd-heading uppercase tracking-widest px-2.5 py-0.5 rounded bg-dnd-red/60 text-dnd-goldLight border border-dnd-gold/40">
+        Rol del DM: Árbitro Creativo y Decisor Final
+      </span>
+      <h2 id="workspace-session-title" class="text-xl font-dnd-title font-bold text-dnd-gold mt-1">El Misterio de la Cripta de los Cuervos</h2>
+      <p id="workspace-session-meta" class="text-xs text-stone-300 font-dnd-body italic">Vinculando trasfondos de Corrin Vale y Hermana Elora</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="btn-conclude-prep" class="px-5 py-2 rounded bg-gradient-to-r from-emerald-800 to-teal-800 hover:brightness-110 text-white font-dnd-heading text-xs font-bold border border-emerald-400/50 shadow-xl transition flex items-center gap-2">
+        <span>🏁</span> Concluir Preparación (Detener M1)
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+    <div class="lg:col-span-7 flex flex-col gap-3">
+      <div class="flex items-center gap-2 border-b border-dnd-gold/30 pb-2">
+        <button id="tab-btn-trama" data-tab="trama" class="tab-btn px-3 py-1.5 rounded text-xs font-dnd-heading font-bold bg-dnd-red text-dnd-goldLight border border-dnd-gold transition">
+          1. Trama No Lineal (HU-05)
+        </button>
+        <button id="tab-btn-npc" data-tab="npc" class="tab-btn px-3 py-1.5 rounded text-xs font-dnd-heading font-bold text-stone-400 hover:text-amber-200 bg-black/60 border border-stone-800 transition">
+          2. Stat Block NPC 5e (HU-06)
+        </button>
+        <button id="tab-btn-mapa" data-tab="mapa" class="tab-btn px-3 py-1.5 rounded text-xs font-dnd-heading font-bold text-stone-400 hover:text-amber-200 bg-black/60 border border-stone-800 transition">
+          3. Mapa Táctico 5ft (HU-07)
+        </button>
+      </div>
+
+      <div class="tome-frame p-5 rounded-xl border border-dnd-gold/50 flex flex-col gap-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <span id="tab-action-label" class="font-dnd-heading font-bold text-xs text-dnd-goldLight block">Conexión de Trama y Ramas No Lineales</span>
+            <span class="text-[11px] text-stone-400 font-dnd-body italic">La IA cruza tu premisa con los trasfondos de tus jugadores</span>
+          </div>
+          <button id="btn-generate" class="px-3.5 py-1.5 rounded bg-dnd-red hover:bg-dnd-redHover text-dnd-goldLight font-dnd-heading font-bold text-xs border border-dnd-gold shadow flex items-center gap-1.5 transition">
+            <span>⚡</span> <span id="ai-btn-text">Consultar al Oráculo IA</span>
+          </button>
+        </div>
+
+        <div class="relative">
+          <textarea id="ai-editor" rows="9" placeholder="Pulsa 'Consultar al Oráculo IA' para recibir propuestas que conecten las historias de tus aventureros..."
+                    class="w-full px-4 py-3 rounded bg-black/70 border border-dnd-gold/40 text-amber-100 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-dnd-gold font-dnd-body custom-scroll"></textarea>
+          <div id="ai-loader" class="hidden absolute inset-0 bg-dnd-wood/90 rounded flex items-center justify-center gap-3 backdrop-blur-sm border border-dnd-gold/40">
+            <div class="text-2xl animate-spin">🎲</div>
+            <span class="text-xs font-dnd-heading text-dnd-goldLight">Tirando dados de narración y cruzando historias...</span>
+          </div>
+        </div>
+
+        <div class="p-3 rounded bg-dnd-redDark/50 border border-dnd-gold/30 flex flex-col gap-1">
+          <span class="text-[11px] font-dnd-heading font-bold text-dnd-gold uppercase tracking-wider flex items-center gap-1.5">
+            <span>⚖️</span> Rúbrica de Validación del Dungeon Master (M2)
+          </span>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-stone-300 font-dnd-body">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="check-c1" checked class="accent-dnd-red">
+              <span>Conecta con los aventureros</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="check-c2" checked class="accent-dnd-red">
+              <span>Utilidad inmediata en mesa</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="check-c3" checked class="accent-dnd-red">
+              <span>Aprobado por el criterio del DM</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-[11px] text-stone-400 font-dnd-body italic">Tú editas el texto a tu gusto antes de añadirlo.</span>
+          <button id="btn-add-validated" class="px-4 py-2 rounded bg-gradient-to-r from-dnd-goldDark via-dnd-gold to-dnd-goldLight hover:brightness-110 text-dnd-wood font-dnd-heading font-bold text-xs border border-amber-200 shadow-lg transition flex items-center gap-2">
+            <span>✓</span> Sellar y Añadir a la Sesión (+1 M2)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-5 flex flex-col">
+      <div class="parchment-sheet p-5 rounded-xl flex-1 flex flex-col shadow-2xl">
+        <div class="flex items-center justify-between mb-2 pb-2 border-b border-dnd-red/30">
+          <div>
+            <h3 class="font-dnd-heading font-bold text-xs text-dnd-red uppercase tracking-wider flex items-center gap-1.5">
+              <span>📜</span> Hojas y Elementos Aprobados
+            </h3>
+            <span class="text-[11px] text-stone-600 font-dnd-body italic">Material listo para dirigir en mesa</span>
+          </div>
+          <span id="validated-badge" class="px-2.5 py-0.5 rounded bg-dnd-red text-dnd-goldLight font-dnd-heading font-bold text-xs border border-dnd-gold">
+            0 elementos
+          </span>
+        </div>
+
+        <div id="elements-list" class="flex-1 overflow-y-auto space-y-3 pr-1 max-h-[460px] custom-scroll">
+          <div id="empty-elements-hint" class="h-56 flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-amber-900/30 rounded-lg text-stone-600 text-xs font-dnd-body">
+            <span class="text-3xl mb-2 opacity-60">📖</span>
+            Aún no has sellado ningún elemento.<br>Pide una propuesta a la IA, ajústala a tu gusto y pulsa "Sellar y Añadir".
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

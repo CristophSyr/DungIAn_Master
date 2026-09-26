@@ -1,0 +1,79 @@
+<div id="modal-satisfaction" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="tome-frame w-full max-w-lg p-6 rounded-2xl border-2 border-dnd-gold shadow-2xl">
+    <div class="text-center mb-5">
+      <div class="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center text-2xl mb-2">
+        ⭐
+      </div>
+      <h3 class="font-dnd-title text-xl font-bold text-dnd-gold">Juicio del Dungeon Master</h3>
+      <p class="text-xs text-stone-300 font-dnd-body italic">Cuestionario sobre la experiencia de asistencia y co-creación previa (M3)</p>
+    </div>
+
+    <form id="form-likert" class="space-y-3 text-xs font-dnd-body">
+      <div class="p-3 rounded bg-black/60 border border-dnd-gold/30">
+        <p class="font-dnd-heading text-amber-200 mb-2">1. La IA conectó con éxito los trasfondos de mis jugadores con mi trama sin quitarme la libertad creativa.</p>
+        <div class="flex items-center justify-between text-[11px] text-stone-400">
+          <span>Desacuerdo (1)</span>
+          <div class="flex gap-4">
+            <label class="cursor-pointer"><input type="radio" name="p1" value="1" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p1" value="2" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p1" value="3" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p1" value="4" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p1" value="5" checked class="accent-dnd-red"></label>
+          </div>
+          <span class="text-dnd-goldLight">Total Acuerdo (5)</span>
+        </div>
+      </div>
+
+      <div class="p-3 rounded bg-black/60 border border-dnd-gold/30">
+        <p class="font-dnd-heading text-amber-200 mb-2">2. El tiempo invertido en preparar los stat blocks de NPCs y el mapa fue notablemente inferior a mi método manual.</p>
+        <div class="flex items-center justify-between text-[11px] text-stone-400">
+          <span>Desacuerdo (1)</span>
+          <div class="flex gap-4">
+            <label class="cursor-pointer"><input type="radio" name="p2" value="1" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p2" value="2" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p2" value="3" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p2" value="4" checked class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p2" value="5" class="accent-dnd-red"></label>
+          </div>
+          <span class="text-dnd-goldLight">Total Acuerdo (5)</span>
+        </div>
+      </div>
+
+      <div class="p-3 rounded bg-black/60 border border-dnd-gold/30">
+        <p class="font-dnd-heading text-amber-200 mb-2">3. Las ramificaciones no lineales propuestas enriquecieron las opciones de decisión para los jugadores.</p>
+        <div class="flex items-center justify-between text-[11px] text-stone-400">
+          <span>Desacuerdo (1)</span>
+          <div class="flex gap-4">
+            <label class="cursor-pointer"><input type="radio" name="p3" value="1" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p3" value="2" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p3" value="3" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p3" value="4" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p3" value="5" checked class="accent-dnd-red"></label>
+          </div>
+          <span class="text-dnd-goldLight">Total Acuerdo (5)</span>
+        </div>
+      </div>
+
+      <div class="p-3 rounded bg-black/60 border border-dnd-gold/30">
+        <p class="font-dnd-heading text-amber-200 mb-2">4. Nivel general de satisfacción con el material final preparado para dirigir.</p>
+        <div class="flex items-center justify-between text-[11px] text-stone-400">
+          <span>Desacuerdo (1)</span>
+          <div class="flex gap-4">
+            <label class="cursor-pointer"><input type="radio" name="p4" value="1" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p4" value="2" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p4" value="3" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p4" value="4" class="accent-dnd-red"></label>
+            <label class="cursor-pointer"><input type="radio" name="p4" value="5" checked class="accent-dnd-red"></label>
+          </div>
+          <span class="text-dnd-goldLight">Total Acuerdo (5)</span>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button type="submit" class="w-full py-2.5 rounded bg-gradient-to-r from-dnd-red via-dnd-redHover to-dnd-red hover:brightness-110 text-dnd-goldLight font-dnd-heading font-bold text-xs border border-dnd-gold shadow-lg transition">
+          Sellar Juicio y Ver Informe de Métricas →
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
