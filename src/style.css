@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=MedievalSharp&display=swap');
+
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    background-color: #0d0907;
+    background-image: 
+      radial-gradient(circle at 50% 20%, rgba(121, 35, 20, 0.15), transparent 60%),
+      radial-gradient(circle at 85% 85%, rgba(201, 154, 62, 0.08), transparent 50%),
+      linear-gradient(to bottom, #110c09, #090605);
+    color: #ede2d1;
+    font-family: 'Lora', Georgia, serif;
+  }
+}
+
+@layer components {
+  .font-dnd-title { font-family: 'Cinzel Decorative', 'Cinzel', Georgia, serif; }
+  .font-dnd-heading { font-family: 'Cinzel', Georgia, serif; }
+  .font-dnd-body { font-family: 'Lora', Georgia, serif; }
+  .font-dnd-script { font-family: 'MedievalSharp', cursive, serif; }
+
+  .parchment-sheet {
+    background: #f4eed9;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(212, 190, 150, 0.35), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(190, 165, 125, 0.4), transparent 45%),
+      linear-gradient(to bottom, #f7f1df, #efe5c8);
+    color: #231815;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.65), 0 0 0 1px #8c6b23, 0 0 0 4px #2b1e16;
+    border: 1px solid #c99a3e;
+  }
+
+  .tome-frame {
+    background: rgba(24, 18, 12, 0.88);
+    backdrop-filter: blur(8px);
+    border: 2px solid #58180d;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.6), 0 0 0 1px #c99a3e;
+  }
+
+  .dnd-tapered-rule {
+    height: 4px;
+    background: radial-gradient(ellipse at center, #58180d 0%, #792314 45%, #c99a3e 85%, transparent 100%);
+    border: none;
+    margin: 10px 0;
+  }
+
+  .stat-box {
+    background: #e9deb9;
+    border: 1px solid #792314;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .battle-grid {
+    background-size: 32px 32px;
+    background-image: 
+      linear-gradient(to right, rgba(201, 154, 62, 0.18) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(201, 154, 62, 0.18) 1px, transparent 1px);
+  }
+
+  .wax-seal {
+    background: radial-gradient(circle at 35% 35%, #9e2a1b, #58180d 70%, #2f0702);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.6), inset 0 1px 2px rgba(255,255,255,0.3);
+    border: 2px solid #3b0f08;
+  }
+}
+
+@layer utilities {
+  .custom-scroll::-webkit-scrollbar { width: 7px; }
+  .custom-scroll::-webkit-scrollbar-track { background: #18120c; }
+  .custom-scroll::-webkit-scrollbar-thumb { background: #58180d; border-radius: 4px; border: 1px solid #c99a3e; }
+}

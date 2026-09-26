@@ -2,7 +2,7 @@
 title DungIAn - Prototipo Interactivo
 echo ========================================================
 echo   Iniciando Prototipo Interactivo de DungIAn (UPAO 2026)
+echo   Iniciando servidor frontend (Vite)...
 echo ========================================================
-echo Abriendo en tu navegador predeterminado...
-start "" "%~dp0index.html"
-exit
+cd /d "%~dp0"
+call npm run dev -- --open
